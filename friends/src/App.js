@@ -30,6 +30,16 @@ class App extends React.Component {
       .catch(err => console.log(err))
   }
 
+  deleteFriend = (e, friend) => {
+    e.preventDefault();
+    axios
+      .delete(`http://localhost:5000/friends/${friend.id}`)
+      .then(res => {
+        this.setState({ friends: res.data})
+      })
+      .catch(err => console.log(err))
+  }
+
   render() {
     console.log(this.state.friends)
     return (
@@ -40,7 +50,7 @@ class App extends React.Component {
           <NavLink className='link' activeClassName='active' to='/addfriend'>Add a Friend</NavLink>
         </nav>
         <h1 className='.App-logo'>Welcome Friends</h1>
-        <Route path='/friendslist' render={props => <FriendsList {...props} friends={this.state.friends} />} />
+        <Route path='/friendslist' render={props => <FriendsList {...props} friends={this.state.friends} deleteFriend={this.deleteFriend} />} />
         <Route path='/addfriend' render={props => <AddFriend {...props} friends={this.state.friends} newFriend={this.newFriend} />} />
       </div>
     );
