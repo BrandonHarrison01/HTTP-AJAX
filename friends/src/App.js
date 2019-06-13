@@ -21,6 +21,15 @@ class App extends React.Component {
       .catch(err => console.log(err))
   }
 
+  newFriend = friend => {
+    axios
+      .post('http://localhost:5000/friends', friend)
+      .then(res => {
+        this.setState({ friends: res.data})
+      })
+      .catch(err => console.log(err))
+  }
+
   render() {
     console.log(this.state.friends)
     return (
@@ -32,7 +41,7 @@ class App extends React.Component {
         </nav>
         <h1 className='.App-logo'>Welcome Friends</h1>
         <Route path='/friendslist' render={props => <FriendsList {...props} friends={this.state.friends} />} />
-        <Route path='/addfriend' render={props => <AddFriend {...props} friends={this.state.friends} />} />
+        <Route path='/addfriend' render={props => <AddFriend {...props} friends={this.state.friends} newFriend={this.newFriend} />} />
       </div>
     );
   }
