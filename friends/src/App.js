@@ -5,10 +5,12 @@ import { NavLink, Route } from 'react-router-dom';
 
 import FriendsList from './components/FriendsList'
 import AddFriend from './components/AddFriend'
+import UpdateFriend from './components/UpdateFriend'
 
 class App extends React.Component {
   state = {
-    friends: []
+    friends: [],
+    activeFriend: null
   }
 
   componentDidMount(){
@@ -26,6 +28,22 @@ class App extends React.Component {
       .post('http://localhost:5000/friends', friend)
       .then(res => {
         this.setState({ friends: res.data})
+      })
+      .catch(err => console.log(err))
+  }
+  
+  setUpdateForm = (e, friend) => {
+    e.preventDefault();
+    this.setState({ activeFriend: friend });
+    this.props.history.push('/updatefriend');
+  }
+
+  updateFriend = friend => {
+    axios
+      .put(`http://localhost:5000/friends/${friend.id}`, friend)
+      .then(res => {
+        this.setState({ friends: res.data})
+        this.props.history.push('/friendslist');
       })
       .catch(err => console.log(err))
   }
@@ -50,8 +68,9 @@ class App extends React.Component {
           <NavLink className='link' activeClassName='active' to='/addfriend'>Add a Friend</NavLink>
         </nav>
         <h1 className='.App-logo'>Welcome Friends</h1>
-        <Route path='/friendslist' render={props => <FriendsList {...props} friends={this.state.friends} deleteFriend={this.deleteFriend} />} />
+        <Route path='/friendslist' render={props => <FriendsList {...props} friends={this.state.friends} deleteFriend={this.deleteFriend} setUpdateForm={this.setUpdateForm} />} />
         <Route path='/addfriend' render={props => <AddFriend {...props} friends={this.state.friends} newFriend={this.newFriend} />} />
+        <Route path='/updatefriend' render={props => <UpdateFriend {...props} friends={this.state.friends} updateFriend={this.updateFriend} activeFriend={this.state.activeFriend} />} />
       </div>
     );
   }

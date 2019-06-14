@@ -12,6 +12,7 @@ function FriendsList(props) {
                         </button>
                     </h2>
                     <h3>{friend.email}</h3>
+                    <button onClick={e => props.setUpdateForm(e, friend)}>Update Info</button>
                 </div>
             ))}
         </div>
